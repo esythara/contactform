@@ -10,7 +10,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                      . $_POST['subject'] . "','"
                      . $_POST['msg'] . "')";
 
-  var_dump($sql); exit;
+echo $sql;
+
+$errors = [];
+$data = [];
+
+if (empty($_POST['fname'])) {
+  $errors['fname'] = 'name is required';
+}
+if (empty($_POST['lname'])) {
+  $errors['lname'] = 'name is required';
+}
+if (empty($_POST['address'])) {
+  $errors['address'] = 'address is required';
+}
+if (empty($_POST['email'])) {
+  $errors['email'] = 'email is required';
+}
+if (empty($_POST['tel'])) {
+  $errors['tel'] = 'telephone is required';
+}
+if (empty($_POST['subject'])) {
+  $errors['subject'] = 'subject required';
+}
+if (empty($_POST['msg'])) {
+  $errors['msg'] = 'message is required';
+}
+if (!empty($errors)) {
+  $data['success'] = false;
+  $data['errors'] = $errors;
+} else {
+  $data['success'] = true;
+  $data['message'] = 'Successful';
+}
+exit;
+
+//$params = [];
+//parse_str($_POST, $params);
+//return $params;
+/* $postData = var_dump($_POST);
+
+  return $sql; */
+  //var_dump($sql); exit;
 }
 
 
@@ -40,6 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         position: fixed;
         width: 100%;
         background-color: white;
+        border-bottom: 2px solid #1abc9c;
         z-index: 9999;
     }
 
@@ -273,6 +315,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         display: none;
         margin-bottom: 20px;
     }
+
+    .footnav {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        background-color: #302f2f;
+    }
+
+    .footrow {
+        display: flex;
+        justify-content: space-between;
+        width: 250px;
+        color: white;
+        padding-top: 125px;
+        padding-bottom: 125px;
+        opacity: 0.5;
+    }
+
+    .footitem {
+      font-size: 25px;
+    }
+
+
 </style>
 
 <body>
@@ -311,7 +376,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <h3>Chat with our development team</h3>
                 <button id="btn">Chat with development</button>
             </div>
-            <form method="post" class="form">
+            <form method="post" class="form" id="contactForm">
                 <div class="formcontent">
                     <h2 style="padding-left: 30px;">Get in touch</h2>
                     <input class="name border" id="fname" type="text" name="fname" placeholder="First Name" required>
@@ -325,9 +390,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <textarea class="message border" id="msg" name="msg" placeholder="Message" rows="11"
                         cols="72"></textarea>
                     <button id="btn2" data-modal-target="#modal">Send Message</button>
-                    <button id="btn2">Get SQL data</button>
+                    <button id="btn3" data-modal-target="#modal">Get SQL data</button>
                     <label>
-                        <input type="checkbox" name="subscribe" disabled="disabled" value="yes">Daily Newsletter</label>
+                        <input type="checkbox" name="subscribe" value="yes">Daily Newsletter</label>
                     </label>
                 </div>
             </form>
@@ -349,6 +414,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
     <div id="overlay"></div>
+
+<div class="footnav">
+    <div class="footrow">
+      <div class="footitem">About</div>
+      <div class="footitem">Jobs</div>
+      <div class="footitem">Privacy</div>
+    </div>
+  </div>
 
     <script type="text/javascript">
 
@@ -399,6 +472,106 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         function validCharForStreetAddress(c) {
             return ",#-/ !@$%^*(){}|[]\\".indexOf(c) >= 0;
         };
+
+        $(document).on('click', '#btn2', function(e) {
+          e.preventDefault();
+          $.ajax({
+  					type: "POST",
+  					url: "new.php",
+  					data: $('#contactForm').serialize()
+				 })
+				.done(function (data) {
+            console.log(data);
+            $('.modal-body').html(data);
+				})
+        })
+
+        $(document).on('click', '#btn3', function(e) {
+          e.preventDefault();
+          let objectify = objectifyForm($('#contactForm').serializeArray());
+          console.log(JSON.stringify(objectify));
+          $('.modal-body').html(JSON.stringify(objectify));
+        })
+
+        function objectifyForm(formArray) {
+            //serialize data function
+            var returnArray = {};
+            for (var i = 0; i < formArray.length; i++){
+                returnArray[formArray[i]['name']] = formArray[i]['value'];
+            }
+            return returnArray;
+        }
+
+        $(document).ready(function() {
+          $("form").submit(function(event) {
+            var formData = {
+              fname: $("#fname").val(),
+              lname: $("#lname").val(),
+              address: $("#address").val(),
+              email: $("#email").val(),
+              tel: $("#tel").val(),
+              subject: $("#subject").val(),
+              message: $("#msg").val(),
+            };
+            $.ajax({
+              type: "POST",
+              url: "new.php",
+              data: formData,
+            }).done(function(data) {
+              console.log(data);
+
+              if(!data.success) {
+                if(data.errors.fname) {
+                  $("#fname-group").addClass("has-error");
+                  $("#fname-group").append(
+                    '<div class="help-block">' + data.errors.name + "</div>"
+                  );
+                }
+                if (data.erros.lname) {
+                  $("#lname-group").addClass("has-error");
+                  $("#lname-group").append(
+                    '<div class="help-block">' + data.errors.lname + "</div>"
+                  );
+                }
+                if (data.errors.email) {
+                  $("#email-group").addClass("has-error");
+                  $("#email-group").append(
+                    '<div class="help-block">' + data.errors.email + "</div>"
+                  );
+                }
+                if (data.errors.tel) {
+                  $("#tel-group").addClass("has-error");
+                  $("#tel-group").append(
+                    '<div class="help-block">' + data.errors.tel + "</div>"
+                  );
+                }
+                if (data.errors.subject) {
+                  $("#subject-group").addClass("has-error");
+                  $("#subject-group").append(
+                    '<div class="help-block">' + data.errors.subject + "</div>"
+                  );
+                }
+                if (data.errors.msg) {
+                  $("#msg-group").addClass("has-error");
+                  $("#msg-group").append(
+                    '<div class="help-block">' + data.errors.msg + "</div>"
+                  );
+                }
+              } else {
+                $("form").html(
+                  '<div class="alert alert-success">' + data.message + "</div>"
+                );
+              }
+            });
+
+            $("form").submit(function(event) {
+              $(".fname-group").removeClass("has-error");
+              $(".help-block").remove();
+            })
+
+            event.preventDefault();
+          })
+        })
 
 
         // $("#btn2").click(function () {
@@ -470,8 +643,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </body>
 
 </html>
-<?php
-
-    // }
-
-?>
