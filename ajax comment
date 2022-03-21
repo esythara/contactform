@@ -1,0 +1,64 @@
+        // $("#btn2").click(function () {
+        //
+        //     var errorMessage = "";
+        //     var fieldsMissing = "";
+        //
+        //     if ($("#fname").val() == "") {
+        //         fieldsMissing += "<br>First Name";
+        //     }
+        //
+        //     if ($("#lname").val() == "") {
+        //         fieldsMissing += "<br>Last Name";
+        //     }
+        //
+        //     if ($("#address").val() == "") {
+        //         fieldsMissing += "<br>Address";
+        //     }
+        //
+        //     if ($("#email").val() == "") {
+        //         fieldsMissing += "<br>Email";
+        //     }
+        //
+        //     if ($("#tel").val() == "") {
+        //         fieldsMissing += "<br>Phone";
+        //     }
+        //
+        //     if ($("#subject").val() == "") {
+        //         fieldsMissing += "<br>Subject";
+        //     }
+        //
+        //     if ($("#msg").val() == "") {
+        //         fieldsMissing += "<br>Message";
+        //     }
+        //
+        //     if (fieldsMissing != "") {
+        //         errorMessage += "<p>the following field(s) are missing:</p>" + fieldsMissing;
+        //     }
+        //
+        //     if (isEmail($("#email").val()) == false) {
+        //
+        //         errorMessage += "<p>your email is not valid</p>";
+        //
+        //     }
+        //
+        //     if ($.isNumeric($("#phone").val()) == false) {
+        //         errorMessage += "<p>your phone number is not numeric</p>"
+        //     }
+        //
+        //     if (isEmail($("#address").val()) == false) {
+        //         errorMessage += "<p>your address is not valid</p>"
+        //     }
+        //
+        //     if (errorMessage != "") {
+        //         $("#errorMessage").html(errorMessage);
+        //     } else {
+        //
+        //         $.post("http://localhost/new.php", { email: $("#email").val(), fname: $("#fname").val() }, function (data) {
+        //             $("#successMessage").html(data);
+        //         });
+        //
+        //         $("#successMessage").show();
+        //         $("#errorMessage").hide();
+        //     }
+        //
+        // });
