@@ -1,57 +1,37 @@
 <?php
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $sql = "INSERT INTO article (fname, lname, address, email, telephone, subject, message)
-          VALUES ('" . $_POST['fname'] . "','"
+
+  if ($_POST['type'] == "SQLsubmit") {
+
+
+
+  $sql = "INSERT INTO contact
+          VALUES (fname, lname, address, email, telephone, subject, message)
+                 ('" . $_POST['fname'] . "','"
                      . $_POST['lname'] . "','"
                      . $_POST['address'] . "','"
                      . $_POST['email'] . "','"
                      . $_POST['tel'] . "','"
                      . $_POST['subject'] . "','"
                      . $_POST['msg'] . "')";
-
 echo $sql;
 
-$errors = [];
-$data = [];
 
-if (empty($_POST['fname'])) {
-  $errors['fname'] = 'name is required';
-}
-if (empty($_POST['lname'])) {
-  $errors['lname'] = 'name is required';
-}
-if (empty($_POST['address'])) {
-  $errors['address'] = 'address is required';
-}
-if (empty($_POST['email'])) {
-  $errors['email'] = 'email is required';
-}
-if (empty($_POST['tel'])) {
-  $errors['tel'] = 'telephone is required';
-}
-if (empty($_POST['subject'])) {
-  $errors['subject'] = 'subject required';
-}
-if (empty($_POST['msg'])) {
-  $errors['msg'] = 'message is required';
-}
-if (!empty($errors)) {
-  $data['success'] = false;
-  $data['errors'] = $errors;
-} else {
-  $data['success'] = true;
-  $data['message'] = 'Successful';
+} elseif($_POST['type'] == "regularSubmit") {
+  $array = [
+    'fname' => $_POST['fname'],
+    'lname' => $_POST['lname'],
+    'address' => $_POST['address'],
+    'email' => $_POST['email'],
+    'tel' => $_POST['tel'],
+    'subject' => $_POST['subject'],
+    'msg' => $_POST['msg']
+  ];
+
+  echo print_r($array);
 }
 exit;
-
-//$params = [];
-//parse_str($_POST, $params);
-//return $params;
-/* $postData = var_dump($_POST);
-
-  return $sql; */
-  //var_dump($sql); exit;
 }
 
 
@@ -64,6 +44,10 @@ exit;
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="unique">
+    <meta name="googlebot" content="design-wow">
+    <meta name="author" content="Ella Marchbanks">
+    <script src="https://kit.fontawesome.com/48a83c2de1.js" crossorigin="anonymous"></script>
     <script src=https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js></script>
     <title>ZZZ_Test</title>
 </head>
@@ -174,7 +158,8 @@ exit;
         box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     }
 
-    .form #btn2 {
+    .form #btn2,
+    #btn3 {
         border: none;
         border-radius: 6px;
         padding: 15px;
@@ -185,7 +170,8 @@ exit;
         color: white;
     }
 
-    .form #btn2:hover {
+    .form #btn2:hover,
+    #btn3:hover {
         background-color: #107561;
         transition: background-color 0.3s ease;
     }
@@ -319,25 +305,16 @@ exit;
     .footnav {
         display: flex;
         justify-content: center;
+        padding-top: 100px;
+        padding-bottom: 100px;
         width: 100%;
         background-color: #302f2f;
     }
 
-    .footrow {
-        display: flex;
-        justify-content: space-between;
-        width: 250px;
-        color: white;
-        padding-top: 125px;
-        padding-bottom: 125px;
-        opacity: 0.5;
+    .foothead {
+        text-align: center;
+        color: white !important;
     }
-
-    .footitem {
-      font-size: 25px;
-    }
-
-
 </style>
 
 <body>
@@ -363,11 +340,8 @@ exit;
     </div>
 
     <div class="container">
-        <!--- this has everyting inside it -->
         <div class="wrapper">
-            <!-- the overlapper -->
             <div class="content">
-                <!-- content inside -->
                 <h3>Call us directly at</h3>
                 <h3 style="color:#1abc9c">123 456 78900</h3>
                 <h4 id="fourhover" style="color:#1abc9c">See all numbers and locations</h4>
@@ -389,8 +363,8 @@ exit;
                         required>
                     <textarea class="message border" id="msg" name="msg" placeholder="Message" rows="11"
                         cols="72"></textarea>
-                    <button id="btn2" data-modal-target="#modal">Send Message</button>
-                    <button id="btn3" data-modal-target="#modal">Get SQL data</button>
+                    <button id="btn2" data-modal-target="#modal">Get SQL data</button>
+                    <button id="btn3" data-modal-target="#modal">Send Message</button>
                     <label>
                         <input type="checkbox" name="subscribe" value="yes">Daily Newsletter</label>
                     </label>
@@ -399,33 +373,31 @@ exit;
         </div>
     </div>
     </div>
-
     <div class="modal" id="modal">
         <div class="modal-header">
             <div class="title">Example Modal</div>
             <button data-close-button class="close-button">&times;</button>
         </div>
         <div class="modal-body" method="post">
-            <?php
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-              var_dump($_POST);
-            }
-          ?>
         </div>
     </div>
     <div id="overlay"></div>
-
-<div class="footnav">
-    <div class="footrow">
-      <div class="footitem">About</div>
-      <div class="footitem">Jobs</div>
-      <div class="footitem">Privacy</div>
+    <div class="footnav">
+        <div class="foothead">
+            <h1>ZZZ_Test</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                incididunt ut labore et
+                dolore</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                incididunt ut labore et
+                dolore</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                incididunt ut labore et
+                dolore</p>
+                <hr>
+        </div>
     </div>
-  </div>
-
     <script type="text/javascript">
-
-
         const openModalButtons = document.querySelectorAll('[data-modal-target]')
         const closeModalButtons = document.querySelectorAll('[data-close-button]')
         const overlay = document.getElementById('overlay')
@@ -451,7 +423,6 @@ exit;
             })
         })
 
-
         function openModal(modal) {
             if (modal == null) return
             modal.classList.add('active')
@@ -473,172 +444,81 @@ exit;
             return ",#-/ !@$%^*(){}|[]\\".indexOf(c) >= 0;
         };
 
-        $(document).on('click', '#btn2', function(e) {
-          e.preventDefault();
-          $.ajax({
-  					type: "POST",
-  					url: "new.php",
-  					data: $('#contactForm').serialize()
-				 })
-				.done(function (data) {
-            console.log(data);
-            $('.modal-body').html(data);
-				})
-        })
-
-        $(document).on('click', '#btn3', function(e) {
-          e.preventDefault();
-          let objectify = objectifyForm($('#contactForm').serializeArray());
-          console.log(JSON.stringify(objectify));
-          $('.modal-body').html(JSON.stringify(objectify));
-        })
-
-        function objectifyForm(formArray) {
-            //serialize data function
-            var returnArray = {};
-            for (var i = 0; i < formArray.length; i++){
-                returnArray[formArray[i]['name']] = formArray[i]['value'];
-            }
-            return returnArray;
-        }
-
-        $(document).ready(function() {
-          $("form").submit(function(event) {
+        $(document).on('click', '#btn2', function (e) {
+            e.preventDefault();
             var formData = {
-              fname: $("#fname").val(),
-              lname: $("#lname").val(),
-              address: $("#address").val(),
-              email: $("#email").val(),
-              tel: $("#tel").val(),
-              subject: $("#subject").val(),
-              message: $("#msg").val(),
+                fname: $("#fname").val(),
+                lname: $("#lname").val(),
+                address: $("#address").val(),
+                email: $("#email").val(),
+                tel: $("#tel").val(),
+                subject: $("#subject").val(),
+                msg: $("#msg").val(),
+                type: "SQLsubmit"
             };
             $.ajax({
-              type: "POST",
-              url: "new.php",
-              data: formData,
-            }).done(function(data) {
-              console.log(data);
+                type: "POST",
+                url: "new.php",
+                data: formData
+            })
+                .done(function (data) {
+                    console.log(data);
+                    $('.modal-body').html(data);
+                })
+        });
 
-              if(!data.success) {
-                if(data.errors.fname) {
-                  $("#fname-group").addClass("has-error");
-                  $("#fname-group").append(
-                    '<div class="help-block">' + data.errors.name + "</div>"
-                  );
-                }
-                if (data.erros.lname) {
-                  $("#lname-group").addClass("has-error");
-                  $("#lname-group").append(
-                    '<div class="help-block">' + data.errors.lname + "</div>"
-                  );
-                }
-                if (data.errors.email) {
-                  $("#email-group").addClass("has-error");
-                  $("#email-group").append(
-                    '<div class="help-block">' + data.errors.email + "</div>"
-                  );
-                }
-                if (data.errors.tel) {
-                  $("#tel-group").addClass("has-error");
-                  $("#tel-group").append(
-                    '<div class="help-block">' + data.errors.tel + "</div>"
-                  );
-                }
-                if (data.errors.subject) {
-                  $("#subject-group").addClass("has-error");
-                  $("#subject-group").append(
-                    '<div class="help-block">' + data.errors.subject + "</div>"
-                  );
-                }
-                if (data.errors.msg) {
-                  $("#msg-group").addClass("has-error");
-                  $("#msg-group").append(
-                    '<div class="help-block">' + data.errors.msg + "</div>"
-                  );
-                }
-              } else {
-                $("form").html(
-                  '<div class="alert alert-success">' + data.message + "</div>"
-                );
-              }
-            });
-
-            $("form").submit(function(event) {
-              $(".fname-group").removeClass("has-error");
-              $(".help-block").remove();
+        $(document).on('click', '#btn3', function (e) {
+            e.preventDefault();
+            var formData = {
+                fname: $("#fname").val(),
+                lname: $("#lname").val(),
+                address: $("#address").val(),
+                email: $("#email").val(),
+                tel: $("#tel").val(),
+                subject: $("#subject").val(),
+                msg: $("#msg").val(),
+                type: "regularSubmit"
+            };
+            $.ajax({
+                type: "POST",
+                url: "new.php",
+                data: formData,
+            }).done(function (data) {
+                console.log(data);
+                $('.modal-body').html(data);
             })
 
-            event.preventDefault();
-          })
-        })
+            function objectifyForm(formArray) {
+                //serialize data function
+                var returnArray = {};
+                for (var i = 0; i < formArray.length; i++) {
+                    returnArray[formArray[i]['name']] = formArray[i]['value'];
+                }
+                return returnArray;
+            }
 
-
-        // $("#btn2").click(function () {
-        //
-        //     var errorMessage = "";
-        //     var fieldsMissing = "";
-        //
-        //     if ($("#fname").val() == "") {
-        //         fieldsMissing += "<br>First Name";
-        //     }
-        //
-        //     if ($("#lname").val() == "") {
-        //         fieldsMissing += "<br>Last Name";
-        //     }
-        //
-        //     if ($("#address").val() == "") {
-        //         fieldsMissing += "<br>Address";
-        //     }
-        //
-        //     if ($("#email").val() == "") {
-        //         fieldsMissing += "<br>Email";
-        //     }
-        //
-        //     if ($("#tel").val() == "") {
-        //         fieldsMissing += "<br>Phone";
-        //     }
-        //
-        //     if ($("#subject").val() == "") {
-        //         fieldsMissing += "<br>Subject";
-        //     }
-        //
-        //     if ($("#msg").val() == "") {
-        //         fieldsMissing += "<br>Message";
-        //     }
-        //
-        //     if (fieldsMissing != "") {
-        //         errorMessage += "<p>the following field(s) are missing:</p>" + fieldsMissing;
-        //     }
-        //
-        //     if (isEmail($("#email").val()) == false) {
-        //
-        //         errorMessage += "<p>your email is not valid</p>";
-        //
-        //     }
-        //
-        //     if ($.isNumeric($("#phone").val()) == false) {
-        //         errorMessage += "<p>your phone number is not numeric</p>"
-        //     }
-        //
-        //     if (isEmail($("#address").val()) == false) {
-        //         errorMessage += "<p>your address is not valid</p>"
-        //     }
-        //
-        //     if (errorMessage != "") {
-        //         $("#errorMessage").html(errorMessage);
-        //     } else {
-        //
-        //         $.post("http://localhost/new.php", { email: $("#email").val(), fname: $("#fname").val() }, function (data) {
-        //             $("#successMessage").html(data);
-        //         });
-        //
-        //         $("#successMessage").show();
-        //         $("#errorMessage").hide();
-        //     }
-        //
-        // });
-
+            $(document).ready(function () {
+                $("form").submit(function (event) {
+                    var formData = {
+                        fname: $("#fname").val(),
+                        lname: $("#lname").val(),
+                        address: $("#address").val(),
+                        email: $("#email").val(),
+                        tel: $("#tel").val(),
+                        subject: $("#subject").val(),
+                        message: $("#msg").val(),
+                        type: "SQLsubmit"
+                    };
+                    $.ajax({
+                        type: "POST",
+                        url: "new.php",
+                        data: formData,
+                    }).done(function (data) {
+                        console.log(data);
+                    });
+                });
+            });
+        });
     </script>
 </body>
 
